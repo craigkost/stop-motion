@@ -4,27 +4,33 @@
 <title>Stop Motion Animation</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="style.css">
-<script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsgif@1.0.2/libgif.min.js"></script>
 
 <body>
-
-<canvas id="canvas"></canvas>
 
 <div class="content">
     <div class="container">
         <div class="output">
-            <img id="photo" alt="The screen capture will appear in this box."/>
+            <canvas id="lastPhoto" alt="The screen capture will appear in this box."></canvas>
         </div>
         <div class="camera">
             <video id="video">Video stream not available.</video>
         </div>
     </div>
     <button id="captureButton">Take photo</button>
-    <div id="photoList">
+    <div id="photoList"></div>
+    <button id="playAnimationButton">Play</button>
+    <button id="undoButton">Undo</button>
+    <button id="resetButton">Reset</button>
+    <div>
+        <img id="preview"></img>
     </div>
 </div>
 
 </body>
+
+<script src="NeuQuant.js"></script>
+<script src="LZWEncoder.js"></script>
+<script src="GIFEncoder.js"></script>
+<script src="script.js"></script>
 
 </html>

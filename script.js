@@ -1,18 +1,14 @@
 (() => {
-    const width = 1024;
+    const width = 640;
     let height = 0;
 
     let video = null;
-    let canvas = null;
-    let photo = null;
-    let captureButton = null;
+    let lastPhoto = null;
     let photoList = null;
 
     function load() {
         video = document.getElementById("video");
-        canvas = document.getElementById("canvas");
-        photo = document.getElementById("photo");
-        captureButton = document.getElementById("captureButton");
+        lastPhoto = document.getElementById("lastPhoto");
         photoList = document.getElementById("photoList");
 
         navigator.mediaDevices
@@ -36,17 +32,53 @@
 
                 video.setAttribute("width", width);
                 video.setAttribute("height", height);
-                canvas.setAttribute("width", width);
-                canvas.setAttribute("height", height);
+                lastPhoto.setAttribute("width", width);
+                lastPhoto.setAttribute("height", height);
 
                 clearPhoto();
             }
         );
 
-        captureButton.addEventListener(
+        document.getElementById("captureButton").addEventListener(
             "click",
             (ev) => {
                 takePhoto();
+                ev.preventDefault();
+            }
+        );
+
+        document.getElementById("playAnimationButton").addEventListener(
+            "click",
+            (ev) => {
+                generatePreview();
+                ev.preventDefault();
+            }
+        );
+
+        document.getElementById("resetButton").addEventListener(
+            "click",
+            (ev) => {
+                clearPhoto();
+                photoList.replaceChildren();
+                document.getElementById('preview').setAttribute('src', '');
+                ev.preventDefault();
+            }
+        );
+
+        document.getElementById("undoButton").addEventListener(
+            "click",
+            (ev) => {
+                if (!photoList.lastChild) {
+                    return;
+                }
+                photoList.removeChild(photoList.lastChild);
+                // repaint canvas with last child if any otherwise clearPhoto()
+                if (photoList.lastChild) {
+                    const lastPhotoContext = lastPhoto.getContext("2d");
+                    lastPhotoContext.drawImage(photoList.lastChild, 0, 0);
+                } else {
+                    clearPhoto();
+                }
                 ev.preventDefault();
             }
         );
@@ -55,26 +87,44 @@
     }
 
     function clearPhoto() {
-        const context = canvas.getContext("2d");
+        const context = lastPhoto.getContext("2d");
         context.fillStyle = "#CCC";
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillRect(0, 0, lastPhoto.width, lastPhoto.height);
+    }
 
-        const data = canvas.toDataURL("image/png");
-        photo.setAttribute("src", data);
+    function copyCanvas(canvas) {
+        const newCanvas = document.createElement("canvas");
+        newCanvas.width = width;
+        newCanvas.height = height;
+        const newCanvasContext = newCanvas.getContext("2d");
+        newCanvasContext.drawImage(canvas, 0, 0);
+        return newCanvas;
     }
 
     function takePhoto() {
-        const context = canvas.getContext("2d");
-        canvas.width = width;
-        canvas.height = height;
+        const context = lastPhoto.getContext("2d");
+        lastPhoto.width = width;
+        lastPhoto.height = height;
         context.drawImage(video, 0, 0, width, height);
 
-        const data = canvas.toDataURL("image/png");
-        photo.setAttribute("src", data);
+        photoList.appendChild(copyCanvas(lastPhoto));
+    }
 
-        const newPhoto = document.createElement("img");
-        newPhoto.setAttribute("src", data);
-        photoList.appendChild(newPhoto);
+    function generatePreview() {
+        if (!photoList.hasChildNodes()) {
+            return;
+        }
+
+        const encoder = new GIFEncoder();
+        encoder.setRepeat(0);
+        encoder.setFrameRate(5 /* FPS */);
+        encoder.start();
+        for (const photo of photoList.children) {
+          encoder.addFrame(photo.getContext("2d"));
+        }
+        encoder.finish();
+
+        document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,'+btoa(encoder.stream().getData()));
     }
 
     window.addEventListener("load", load, false);
