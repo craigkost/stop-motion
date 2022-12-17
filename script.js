@@ -43,6 +43,7 @@
             "click",
             (ev) => {
                 takePhoto();
+                updateCameraOpacity(0.5);
                 ev.preventDefault();
             }
         );
@@ -61,6 +62,7 @@
                 clearPhoto();
                 photoList.replaceChildren();
                 document.getElementById('preview').setAttribute('src', '');
+                updateCameraOpacity(1);
                 ev.preventDefault();
             }
         );
@@ -78,12 +80,26 @@
                     lastPhotoContext.drawImage(photoList.lastChild, 0, 0);
                 } else {
                     clearPhoto();
+                    updateCameraOpacity(1);
                 }
                 ev.preventDefault();
             }
         );
 
+        document.getElementById("downloadButton").addEventListener(
+            "click",
+            (ev) => {
+                generatePreview(true);
+            }
+        );
+
         clearPhoto();
+    }
+
+    function updateCameraOpacity(opacity) {
+        document.querySelectorAll('.camera').forEach(camera => {
+           camera.style.opacity = opacity;
+        });
     }
 
     function clearPhoto() {
@@ -110,7 +126,7 @@
         photoList.appendChild(copyCanvas(lastPhoto));
     }
 
-    function generatePreview() {
+    function generatePreview(requestDownload) {
         if (!photoList.hasChildNodes()) {
             return;
         }
@@ -125,6 +141,10 @@
         encoder.finish();
 
         document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,'+btoa(encoder.stream().getData()));
+
+        if (requestDownload) {
+            encoder.download('stop-animation.gif');
+        }
     }
 
     window.addEventListener("load", load, false);

@@ -2,10 +2,6 @@
   display: none;
 }
 
-.camera {
-  opacity: 0.5;
-}
-
 .container {
   display: grid;
 }
