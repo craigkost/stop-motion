@@ -1,10 +1,14 @@
 (() => {
     const width = 640;
+    const fps = 5; // 200 ms/frame
     let height = 0;
 
     let video = null;
     let lastPhoto = null;
     let photoList = null;
+
+    let playAnimationInterval = null;
+    let currentFrame = 0;
 
     function load() {
         video = document.getElementById("video");
@@ -48,10 +52,10 @@
             }
         );
 
-        document.getElementById("playAnimationButton").addEventListener(
+        document.getElementById("playOrPauseButton").addEventListener(
             "click",
             (ev) => {
-                generatePreview();
+                playOrPauseAnimation();
                 ev.preventDefault();
             }
         );
@@ -89,7 +93,7 @@
         document.getElementById("downloadButton").addEventListener(
             "click",
             (ev) => {
-                generatePreview(true);
+                download();
             }
         );
 
@@ -126,7 +130,35 @@
         photoList.appendChild(copyCanvas(lastPhoto));
     }
 
-    function generatePreview(requestDownload) {
+    function playOrPauseAnimation() {
+        if (playAnimationInterval == null) {
+            if (photoList.hasChildNodes()) {
+                document.querySelectorAll('.camera').forEach(camera => {
+                   camera.style.visibility = 'hidden';
+                });
+                playAnimationInterval = setInterval(renderNextFrame, 1000/fps);
+                playOrPauseButton.textContent = 'Pause';
+            }
+        } else {
+            clearInterval(playAnimationInterval);
+            playAnimationInterval = null;
+            currentFrame = 0;
+            document.querySelectorAll('.camera').forEach(camera => {
+               camera.style.visibility = 'visible';
+            });
+            lastPhoto.getContext('2d').drawImage(photoList.children[photoList.children.length-1], 0, 0);
+            playOrPauseButton.textContent = 'Play';
+        }
+    }
+
+    function renderNextFrame() {
+        if (photoList.hasChildNodes()) {
+            lastPhoto.getContext('2d').drawImage(photoList.children[currentFrame], 0, 0);
+            currentFrame = (currentFrame + 1) % photoList.children.length;
+        }
+    }
+
+    function download() {
         if (!photoList.hasChildNodes()) {
             return;
         }
@@ -135,16 +167,23 @@
         encoder.setRepeat(0);
         encoder.setFrameRate(5 /* FPS */);
         encoder.start();
-        for (const photo of photoList.children) {
-          encoder.addFrame(photo.getContext("2d"));
-        }
-        encoder.finish();
 
-        document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,'+btoa(encoder.stream().getData()));
+        var i = 0;
+        const progress = document.getElementById('progress');
+        var downloadIntervalId = setInterval(function() {
+            if (i < photoList.children.length) {
+                encoder.addFrame(photoList.children[i].getContext("2d", {willReadFrequently: true}));
+                i += 1;
+                progress.innerText = (100.0*i/photoList.children.length).toFixed(0) + '%';
+            } else {
+                encoder.finish();
+                document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
+                encoder.download('stop-motion-animation.gif');
 
-        if (requestDownload) {
-            encoder.download('stop-animation.gif');
-        }
+                progress.innerText = 'Download Complete';
+                clearInterval(downloadIntervalId);
+            }
+        }, 1);
     }
 
     window.addEventListener("load", load, false);

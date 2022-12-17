@@ -10,7 +10,7 @@
 <div class="content">
     <div class="container">
         <div class="output">
-            <canvas id="lastPhoto" alt="The screen capture will appear in this box."></canvas>
+            <canvas id="lastPhoto"></canvas>
         </div>
         <div class="camera">
             <video id="video">Video stream not available.</video>
@@ -18,12 +18,13 @@
     </div>
     <button id="captureButton">Take photo</button>
     <div id="photoList"></div>
-    <button id="playAnimationButton">Play</button>
+    <button id="playOrPauseButton">Play</button>
     <button id="undoButton">Undo</button>
     <button id="resetButton">Reset</button>
     <button id="downloadButton">Download</button>
+    <span id="progress"></span>
     <div>
-        <img id="preview"></img>
+        <img id="preview" src="">
     </div>
 </div>
 
