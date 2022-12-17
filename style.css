@@ -1,0 +1,19 @@
+#canvas {
+  display: none;
+}
+
+.camera {
+  opacity: 0.5;
+}
+
+.container {
+  display: grid;
+}
+
+.camera, .output {
+  grid-area: 1 / 1;
+}
+
+#photoList img {
+  width: 64px;
+}
