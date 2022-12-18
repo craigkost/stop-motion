@@ -13,6 +13,7 @@
     let playAnimationInterval = null;
     let currentFrameId = 0;
 
+    let downloadIntervalId = null;
     let encoder = null;
 
     function load() {
@@ -74,6 +75,14 @@
             'click',
             (ev) => {
                 download();
+                ev.preventDefault();
+            }
+        );
+
+        document.getElementById('cancel').addEventListener(
+            'click',
+            (ev) => {
+                closeDownloadModal();
                 ev.preventDefault();
             }
         );
@@ -201,7 +210,7 @@
             return;
         }
 
-        document.getElementById('downloadModal').style.display = 'block';
+        document.getElementById('downloadModal').style.display = 'flex';
 
         encoder = new GIFEncoder();
         encoder.setRepeat(0);
@@ -210,7 +219,7 @@
 
         let i = 0;
         const progress = document.getElementById('progress');
-        let downloadIntervalId = setInterval(function() {
+        downloadIntervalId = setInterval(function() {
             if (i < frameList.children.length) {
                 encoder.addFrame(frameList.children[i].getContext('2d'));
                 i += 1;
@@ -219,17 +228,26 @@
                 encoder.finish();
                 document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
 
-                progress.innerText = 'Complete';
+                progress.innerText = '';
                 clearInterval(downloadIntervalId);
+                downloadIntervalId = null;
             }
         }, 1);
+    }
+
+    function closeDownloadModal() {
+        if (downloadIntervalId != null) {
+            clearInterval(downloadIntervalId);
+        }
+        encoder = null;
+        document.getElementById('preview').setAttribute('src', '');
+        document.getElementById('downloadModal').style.display = 'none';
     }
 
     function download() {
         if (encoder) {
             encoder.download(document.getElementById('fileName').value);
-            document.getElementById('preview').setAttribute('src', '');
-            document.getElementById('downloadModal').style.display = 'none';
+            closeDownloadModal();
         }
     }
 
