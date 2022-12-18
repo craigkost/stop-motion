@@ -107,7 +107,7 @@
     }
 
     function clearFrame() {
-        const context = lastFrame.getContext('2d');
+        const context = lastFrame.getContext('2d', {willReadFrequently: true});
         context.fillStyle = '#CCC';
         context.fillRect(0, 0, lastFrame.width, lastFrame.height);
     }
@@ -116,7 +116,7 @@
         const newCanvas = document.createElement('canvas');
         newCanvas.width = width;
         newCanvas.height = height;
-        const newCanvasContext = newCanvas.getContext('2d');
+        const newCanvasContext = newCanvas.getContext('2d', {willReadFrequently: true});
         newCanvasContext.drawImage(canvas, 0, 0);
         return newCanvas;
     }
@@ -212,7 +212,7 @@
         const progress = document.getElementById('progress');
         let downloadIntervalId = setInterval(function() {
             if (i < frameList.children.length) {
-                encoder.addFrame(frameList.children[i].getContext('2d', {willReadFrequently: true}));
+                encoder.addFrame(frameList.children[i].getContext('2d'));
                 i += 1;
                 progress.innerText = (100.0*i/frameList.children.length).toFixed(0) + '%';
             } else {
