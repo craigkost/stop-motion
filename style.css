@@ -23,10 +23,6 @@ html {
   -webkit-text-stroke-color: black;
 }
 
-#canvas {
-  display: none;
-}
-
 .container {
   display: grid;
   width: fit-content;
@@ -93,4 +89,14 @@ html {
 
 #frameList canvas.selected {
   background-color: #ff6d91;
+}
+
+#downloadModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  width: 100%;
+  height: 100%;
+  display: none;
 }

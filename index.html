@@ -28,10 +28,16 @@
         <button id="downloadButton" class="btn download"><i class="fa-regular fa-circle-down"></i></button>
     </div>
     <div id="frameList"></div>
+</div>
+
+<div id="downloadModal">
     <span id="progress"></span>
-    <div>
-        <img id="preview" src="">
-    </div>
+    <img id="preview" src="">
+    <form>
+        <label for="fileName">File name</label>
+        <input type="text" id="fileName" name="fileName" value="example.gif">
+        <input type="submit" value="Save" id="save">
+    </form>
 </div>
 
 </body>

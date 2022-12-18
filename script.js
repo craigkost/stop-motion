@@ -13,6 +13,8 @@
     let playAnimationInterval = null;
     let currentFrameId = 0;
 
+    let encoder = null;
+
     function load() {
         video = document.getElementById('video');
         lastFrame = document.getElementById('lastFrame');
@@ -63,7 +65,15 @@
         document.getElementById('downloadButton').addEventListener(
             'click',
             (ev) => {
-                download();
+                prepareDownload();
+                ev.preventDefault();
+            }
+        );
+
+        document.getElementById('save').addEventListener(
+            'click',
+            (ev) => {
+                download("example.gif");
                 ev.preventDefault();
             }
         );
@@ -186,19 +196,21 @@
         }
     }
 
-    function download() {
+    function prepareDownload() {
         if (!frameList.hasChildNodes()) {
             return;
         }
 
-        const encoder = new GIFEncoder();
+        document.getElementById('downloadModal').style.display = 'block';
+
+        encoder = new GIFEncoder();
         encoder.setRepeat(0);
         encoder.setFrameRate(fps);
         encoder.start();
 
-        var i = 0;
+        let i = 0;
         const progress = document.getElementById('progress');
-        var downloadIntervalId = setInterval(function() {
+        let downloadIntervalId = setInterval(function() {
             if (i < frameList.children.length) {
                 encoder.addFrame(frameList.children[i].getContext('2d', {willReadFrequently: true}));
                 i += 1;
@@ -206,12 +218,19 @@
             } else {
                 encoder.finish();
                 document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
-                encoder.download('stop-motion-animation.gif');
 
-                progress.innerText = 'Download Complete';
+                progress.innerText = 'Complete';
                 clearInterval(downloadIntervalId);
             }
         }, 1);
+    }
+
+    function download(fileName) {
+        if (encoder) {
+            encoder.download(fileName);
+            document.getElementById('preview').setAttribute('src', '');
+            document.getElementById('downloadModal').style.display = 'none';
+        }
     }
 
     window.addEventListener('load', load, false);
