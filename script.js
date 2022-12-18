@@ -10,17 +10,18 @@
     let playAnimationInterval = null;
     let currentFrame = 0;
 
-    function load() {
-        video = document.getElementById("video");
-        lastPhoto = document.getElementById("lastPhoto");
-        photoList = document.getElementById("photoList");
+    const videoSources = ['environment', 'user'];
+    let videoSourceId = -1; // unset
+
+    function switchCamera() {
+        videoSourceId = (videoSourceId + 1) % videoSources.length;
 
         navigator.mediaDevices
             .getUserMedia({
-                            video: {
-                              facingMode: { exact: "environment" }
-                            }
-                          })
+                video: {
+                  facingMode: { exact: videoSources[videoSourceId] }
+                }
+            })
             .then((stream) => {
                 video.srcObject = stream;
                 video.play();
@@ -28,18 +29,21 @@
             .catch((err) => {
                 console.error(`An error occurred: ${err}`);
             });
+    }
+
+    function load() {
+        video = document.getElementById("video");
+        lastPhoto = document.getElementById("lastPhoto");
+        photoList = document.getElementById("photoList");
+
+        switchCamera();
 
         video.addEventListener(
             "canplay",
             (ev) => {
                 height = video.videoHeight / (video.videoWidth / width);
-
                 video.setAttribute("width", width);
                 video.setAttribute("height", height);
-                lastPhoto.setAttribute("width", width);
-                lastPhoto.setAttribute("height", height);
-
-                clearPhoto();
             }
         );
 
@@ -50,6 +54,10 @@
                 updateCameraOpacity(0.5);
                 ev.preventDefault();
             }
+        );
+        document.getElementById('switchCameraButton').addEventListener(
+            'click',
+            switchCamera
         );
 
         document.getElementById("playOrPauseButton").addEventListener(
