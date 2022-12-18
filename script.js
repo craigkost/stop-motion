@@ -194,7 +194,7 @@
 
         const encoder = new GIFEncoder();
         encoder.setRepeat(0);
-        encoder.setFrameRate(5 /* FPS */);
+        encoder.setFrameRate(fps);
         encoder.start();
 
         var i = 0;
