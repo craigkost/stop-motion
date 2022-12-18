@@ -73,7 +73,7 @@
         document.getElementById('save').addEventListener(
             'click',
             (ev) => {
-                download("example.gif");
+                download();
                 ev.preventDefault();
             }
         );
@@ -225,9 +225,9 @@
         }, 1);
     }
 
-    function download(fileName) {
+    function download() {
         if (encoder) {
-            encoder.download(fileName);
+            encoder.download(document.getElementById('fileName').value);
             document.getElementById('preview').setAttribute('src', '');
             document.getElementById('downloadModal').style.display = 'none';
         }
