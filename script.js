@@ -13,24 +13,6 @@
     const videoSources = ['environment', 'user'];
     let videoSourceId = -1; // unset
 
-    function switchCamera() {
-        videoSourceId = (videoSourceId + 1) % videoSources.length;
-
-        navigator.mediaDevices
-            .getUserMedia({
-                video: {
-                  facingMode: videoSources[videoSourceId]
-                }
-            })
-            .then((stream) => {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch((err) => {
-                console.error(`An error occurred: ${err}`);
-            });
-    }
-
     function load() {
         video = document.getElementById('video');
         lastFrame = document.getElementById('lastFrame');
@@ -96,6 +78,24 @@
         clearFrame();
     }
 
+    function switchCamera() {
+        videoSourceId = (videoSourceId + 1) % videoSources.length;
+
+        navigator.mediaDevices
+            .getUserMedia({
+                video: {
+                  facingMode: videoSources[videoSourceId]
+                }
+            })
+            .then((stream) => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch((err) => {
+                console.error(`An error occurred: ${err}`);
+            });
+    }
+
     function updateCameraOpacity(opacity) {
         document.querySelectorAll('.camera').forEach(camera => {
            camera.style.opacity = opacity;
@@ -135,6 +135,25 @@
         updateSelectedFrame(newFrame);
     }
 
+    function updateLastFrame(frame) {
+        lastFrame.getContext('2d').drawImage(frame, 0, 0);
+        updateSelectedFrame(frame);
+    }
+
+    function updateSelectedFrame(frame) {
+        for (const frame of frameList.children) {
+           frame.classList.remove('selected');
+        }
+        frame.classList.add('selected');
+    }
+
+    function renderNextFrame() {
+        if (frameList.hasChildNodes()) {
+            updateLastFrame(frameList.children[currentFrame]);
+            currentFrame = (currentFrame + 1) % frameList.children.length;
+        }
+    }
+
     function playOrPauseAnimation() {
         if (playAnimationInterval == null) {
             if (frameList.hasChildNodes()) {
@@ -153,25 +172,6 @@
             });
             updateLastFrame(frameList.lastChild);
             playOrPauseButton.textContent = 'Play';
-        }
-    }
-
-    function updateLastFrame(frame) {
-        lastFrame.getContext('2d').drawImage(frame, 0, 0);
-        updateSelectedFrame(frame);
-    }
-
-    function updateSelectedFrame(frame) {
-        for (const frame of frameList.children) {
-           frame.classList.remove('selected');
-        }
-        frame.classList.add('selected');
-    }
-
-    function renderNextFrame() {
-        if (frameList.hasChildNodes()) {
-            updateLastFrame(frameList.children[currentFrame]);
-            currentFrame = (currentFrame + 1) % frameList.children.length;
         }
     }
 
