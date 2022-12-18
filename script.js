@@ -3,22 +3,20 @@
     const fps = 5; // 200 ms/frame
     let height = 0;
 
+    const videoSources = ['environment', 'user'];
+    let videoSourceId = -1; // unset
     let video = null;
+
     let lastFrame = null;
     let frameList = null;
 
     let playAnimationInterval = null;
     let currentFrameId = 0;
 
-    const videoSources = ['environment', 'user'];
-    let videoSourceId = -1; // unset
-
     function load() {
         video = document.getElementById('video');
         lastFrame = document.getElementById('lastFrame');
         frameList = document.getElementById('frameList');
-
-        switchCamera();
 
         video.addEventListener(
             'canplay',
@@ -69,6 +67,7 @@
             }
         );
 
+        switchCamera();
         clearFrame();
     }
 
