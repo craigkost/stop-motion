@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="UTF-8">
-<title>Stop Motion Animation</title>
+<title>Stop Motion</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
 
 <body>
 
 <div class="content">
-    <button id="switchCameraButton">Switch Camera</button>
+    <div class="header">
+        <h1>Stop Motion</h1>
+    </div>
     <div class="container">
         <div class="output">
             <canvas id="lastFrame"></canvas>
@@ -16,12 +19,15 @@
         <div class="camera">
             <video id="video">Video stream not available.</video>
         </div>
+        <button id="switchCameraButton" class="btn switch-camera"><i class="fa-solid fa-camera-rotate"></i></button>
     </div>
-    <button id="captureButton">Capture</button>
-    <button id="undoButton">Undo</button>
+    <div class="controls">
+        <button id="playPauseButton" class="btn play-pause"><i id="playPauseButtonIcon" class="fa-regular fa-circle-play"></i></button>
+        <button id="captureButton" class="btn capture"><i class="fa-regular fa-circle"></i></button>
+        <button id="undoButton" class="btn undo"><i class="fa-regular fa-circle-xmark"></i></button>
+        <button id="downloadButton" class="btn download"><i class="fa-regular fa-circle-down"></i></button>
+    </div>
     <div id="frameList"></div>
-    <button id="playOrPauseButton">Play</button>
-    <button id="downloadButton">Download</button>
     <span id="progress"></span>
     <div>
         <img id="preview" src="">

@@ -1,11 +1,26 @@
 html {
     height: 100%;
     background-color: #ffd54f;
+    font-family: "Gill Sans", sans-serif;
 }
 
 .content {
   margin: auto;
   width: fit-content;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 10px 10px #a48933;
+}
+
+.header h1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 400%;
+  margin: 20px 0;
+  -webkit-text-fill-color: #ff6d91; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
 }
 
 #canvas {
@@ -15,13 +30,56 @@ html {
 .container {
   display: grid;
   width: fit-content;
-  padding: 10px;
-  background-color: black;
   margin: 10px 0;
 }
 
 .camera, .output {
   grid-area: 1 / 1;
+}
+
+.btn.switch-camera {
+  position: absolute;
+  color: white;
+  margin: 5px;
+  opacity: 0.5;
+  text-shadow: 0 0 3px black;
+}
+
+.btn.switch-camera:hover {
+  color: #e0e0e0;
+}
+
+/* Controls */
+
+.controls {
+  text-align: center;
+}
+
+.btn.play-pause {
+  float: left;
+}
+
+.btn.capture {
+  font-size: 60px;
+}
+
+.btn.undo {
+  position: absolute;
+}
+
+.btn.download {
+  float: right;
+}
+
+.btn {
+  background: none;
+  border: none;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: #ff6d91;
 }
 
 #frameList {
@@ -34,5 +92,5 @@ html {
 }
 
 #frameList canvas.selected {
-  background-color: red;
+  background-color: #ff6d91;
 }

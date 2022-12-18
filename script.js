@@ -44,7 +44,7 @@
             }
         );
 
-        document.getElementById('playOrPauseButton').addEventListener(
+        document.getElementById('playPauseButton').addEventListener(
             'click',
             (ev) => {
                 playOrPauseAnimation();
@@ -168,7 +168,9 @@
                    camera.style.visibility = 'hidden';
                 });
                 playAnimationInterval = setInterval(renderNextFrame, 1000/fps);
-                playOrPauseButton.textContent = 'Pause';
+                const icon = document.getElementById('playPauseButtonIcon');
+                icon.classList.remove('fa-circle-play');
+                icon.classList.add('fa-circle-stop');
             }
         } else {
             clearInterval(playAnimationInterval);
@@ -178,7 +180,9 @@
                camera.style.visibility = 'visible';
             });
             updateLastFrame(frameList.lastChild);
-            playOrPauseButton.textContent = 'Play';
+            const icon = document.getElementById('playPauseButtonIcon');
+            icon.classList.remove('fa-circle-stop');
+            icon.classList.add('fa-circle-play');
         }
     }
 
