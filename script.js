@@ -19,7 +19,7 @@
         navigator.mediaDevices
             .getUserMedia({
                 video: {
-                  facingMode: { exact: videoSources[videoSourceId] }
+                  facingMode: videoSources[videoSourceId]
                 }
             })
             .then((stream) => {
@@ -88,8 +88,7 @@
                 photoList.removeChild(photoList.lastChild);
                 // repaint canvas with last child if any otherwise clearPhoto()
                 if (photoList.lastChild) {
-                    const lastPhotoContext = lastPhoto.getContext("2d");
-                    lastPhotoContext.drawImage(photoList.lastChild, 0, 0);
+                    updateLastPhoto(photoList.lastChild);
                 } else {
                     clearPhoto();
                     updateCameraOpacity(1);
@@ -135,7 +134,17 @@
         lastPhoto.height = height;
         context.drawImage(video, 0, 0, width, height);
 
-        photoList.appendChild(copyCanvas(lastPhoto));
+        const newPhoto = copyCanvas(lastPhoto);
+        newPhoto.addEventListener(
+            "click",
+            (ev) => {
+                console.log("clicked!");
+                updateLastPhoto(ev.target);
+                ev.preventDefault();
+            }
+        );
+        photoList.appendChild(newPhoto);
+        updateSelectedFrame(newPhoto);
     }
 
     function playOrPauseAnimation() {
@@ -154,14 +163,26 @@
             document.querySelectorAll('.camera').forEach(camera => {
                camera.style.visibility = 'visible';
             });
-            lastPhoto.getContext('2d').drawImage(photoList.children[photoList.children.length-1], 0, 0);
+            updateLastPhoto(photoList.lastChild);
             playOrPauseButton.textContent = 'Play';
         }
     }
 
+    function updateLastPhoto(photo) {
+        lastPhoto.getContext('2d').drawImage(photo, 0, 0);
+        updateSelectedFrame(photo);
+    }
+
+    function updateSelectedFrame(frame) {
+        for (const photo of photoList.children) {
+           photo.classList.remove("selected");
+        }
+        frame.classList.add("selected");
+    }
+
     function renderNextFrame() {
         if (photoList.hasChildNodes()) {
-            lastPhoto.getContext('2d').drawImage(photoList.children[currentFrame], 0, 0);
+            updateLastPhoto(photoList.children[currentFrame]);
             currentFrame = (currentFrame + 1) % photoList.children.length;
         }
     }

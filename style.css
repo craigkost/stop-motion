@@ -11,5 +11,10 @@
 }
 
 #photoList canvas {
-  width: 64px;
+  width: 62px;
+  padding: 1px
+}
+
+#photoList canvas.selected {
+  background-color: red;
 }
