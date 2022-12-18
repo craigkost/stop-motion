@@ -39,7 +39,10 @@
         );
         document.getElementById('switchCameraButton').addEventListener(
             'click',
-            switchCamera
+            (ev) => {
+                switchCamera();
+                ev.preventDefault();
+            }
         );
 
         document.getElementById('playOrPauseButton').addEventListener(
@@ -53,16 +56,7 @@
         document.getElementById('undoButton').addEventListener(
             'click',
             (ev) => {
-                if (!frameList.lastChild) {
-                    return;
-                }
-                frameList.removeChild(frameList.lastChild);
-                if (frameList.lastChild) {
-                    updateLastFrame(frameList.lastChild);
-                } else {
-                    clearFrame();
-                    updateCameraOpacity(1);
-                }
+                undo();
                 ev.preventDefault();
             }
         );
@@ -145,6 +139,19 @@
            frame.classList.remove('selected');
         }
         frame.classList.add('selected');
+    }
+
+    function undo() {
+        if (!frameList.lastChild) {
+            return;
+        }
+        frameList.removeChild(frameList.lastChild);
+        if (frameList.lastChild) {
+            updateLastFrame(frameList.lastChild);
+        } else {
+            clearFrame();
+            updateCameraOpacity(1);
+        }
     }
 
     function renderNextFrame() {
