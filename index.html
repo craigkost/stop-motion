@@ -8,21 +8,20 @@
 <body>
 
 <div class="content">
+    <button id="switchCameraButton">Switch Camera</button>
     <div class="container">
         <div class="output">
-            <canvas id="lastPhoto"></canvas>
+            <canvas id="lastFrame"></canvas>
         </div>
         <div class="camera">
             <video id="video">Video stream not available.</video>
         </div>
     </div>
-    <button id="captureButton">Take photo</button>
-    <div id="photoList"></div>
-    <button id="playOrPauseButton">Play</button>
+    <button id="captureButton">Capture</button>
     <button id="undoButton">Undo</button>
-    <button id="resetButton">Reset</button>
+    <div id="frameList"></div>
+    <button id="playOrPauseButton">Play</button>
     <button id="downloadButton">Download</button>
-    <button id="switchCameraButton">Switch Camera</button>
     <span id="progress"></span>
     <div>
         <img id="preview" src="">

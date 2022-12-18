@@ -4,8 +4,8 @@
     let height = 0;
 
     let video = null;
-    let lastPhoto = null;
-    let photoList = null;
+    let lastFrame = null;
+    let frameList = null;
 
     let playAnimationInterval = null;
     let currentFrame = 0;
@@ -32,25 +32,25 @@
     }
 
     function load() {
-        video = document.getElementById("video");
-        lastPhoto = document.getElementById("lastPhoto");
-        photoList = document.getElementById("photoList");
+        video = document.getElementById('video');
+        lastFrame = document.getElementById('lastFrame');
+        frameList = document.getElementById('frameList');
 
         switchCamera();
 
         video.addEventListener(
-            "canplay",
+            'canplay',
             (ev) => {
                 height = video.videoHeight / (video.videoWidth / width);
-                video.setAttribute("width", width);
-                video.setAttribute("height", height);
+                video.setAttribute('width', width);
+                video.setAttribute('height', height);
             }
         );
 
-        document.getElementById("captureButton").addEventListener(
-            "click",
+        document.getElementById('captureButton').addEventListener(
+            'click',
             (ev) => {
-                takePhoto();
+                captureFrame();
                 updateCameraOpacity(0.5);
                 ev.preventDefault();
             }
@@ -60,51 +60,40 @@
             switchCamera
         );
 
-        document.getElementById("playOrPauseButton").addEventListener(
-            "click",
+        document.getElementById('playOrPauseButton').addEventListener(
+            'click',
             (ev) => {
                 playOrPauseAnimation();
                 ev.preventDefault();
             }
         );
 
-        document.getElementById("resetButton").addEventListener(
-            "click",
+        document.getElementById('undoButton').addEventListener(
+            'click',
             (ev) => {
-                clearPhoto();
-                photoList.replaceChildren();
-                document.getElementById('preview').setAttribute('src', '');
-                updateCameraOpacity(1);
-                ev.preventDefault();
-            }
-        );
-
-        document.getElementById("undoButton").addEventListener(
-            "click",
-            (ev) => {
-                if (!photoList.lastChild) {
+                if (!frameList.lastChild) {
                     return;
                 }
-                photoList.removeChild(photoList.lastChild);
-                // repaint canvas with last child if any otherwise clearPhoto()
-                if (photoList.lastChild) {
-                    updateLastPhoto(photoList.lastChild);
+                frameList.removeChild(frameList.lastChild);
+                if (frameList.lastChild) {
+                    updateLastFrame(frameList.lastChild);
                 } else {
-                    clearPhoto();
+                    clearFrame();
                     updateCameraOpacity(1);
                 }
                 ev.preventDefault();
             }
         );
 
-        document.getElementById("downloadButton").addEventListener(
-            "click",
+        document.getElementById('downloadButton').addEventListener(
+            'click',
             (ev) => {
                 download();
+                ev.preventDefault();
             }
         );
 
-        clearPhoto();
+        clearFrame();
     }
 
     function updateCameraOpacity(opacity) {
@@ -113,43 +102,42 @@
         });
     }
 
-    function clearPhoto() {
-        const context = lastPhoto.getContext("2d");
-        context.fillStyle = "#CCC";
-        context.fillRect(0, 0, lastPhoto.width, lastPhoto.height);
+    function clearFrame() {
+        const context = lastFrame.getContext('2d');
+        context.fillStyle = '#CCC';
+        context.fillRect(0, 0, lastFrame.width, lastFrame.height);
     }
 
     function copyCanvas(canvas) {
-        const newCanvas = document.createElement("canvas");
+        const newCanvas = document.createElement('canvas');
         newCanvas.width = width;
         newCanvas.height = height;
-        const newCanvasContext = newCanvas.getContext("2d");
+        const newCanvasContext = newCanvas.getContext('2d');
         newCanvasContext.drawImage(canvas, 0, 0);
         return newCanvas;
     }
 
-    function takePhoto() {
-        const context = lastPhoto.getContext("2d");
-        lastPhoto.width = width;
-        lastPhoto.height = height;
+    function captureFrame() {
+        const context = lastFrame.getContext('2d');
+        lastFrame.width = width;
+        lastFrame.height = height;
         context.drawImage(video, 0, 0, width, height);
 
-        const newPhoto = copyCanvas(lastPhoto);
-        newPhoto.addEventListener(
-            "click",
+        const newFrame = copyCanvas(lastFrame);
+        newFrame.addEventListener(
+            'click',
             (ev) => {
-                console.log("clicked!");
-                updateLastPhoto(ev.target);
+                updateLastFrame(ev.target);
                 ev.preventDefault();
             }
         );
-        photoList.appendChild(newPhoto);
-        updateSelectedFrame(newPhoto);
+        frameList.appendChild(newFrame);
+        updateSelectedFrame(newFrame);
     }
 
     function playOrPauseAnimation() {
         if (playAnimationInterval == null) {
-            if (photoList.hasChildNodes()) {
+            if (frameList.hasChildNodes()) {
                 document.querySelectorAll('.camera').forEach(camera => {
                    camera.style.visibility = 'hidden';
                 });
@@ -163,32 +151,32 @@
             document.querySelectorAll('.camera').forEach(camera => {
                camera.style.visibility = 'visible';
             });
-            updateLastPhoto(photoList.lastChild);
+            updateLastFrame(frameList.lastChild);
             playOrPauseButton.textContent = 'Play';
         }
     }
 
-    function updateLastPhoto(photo) {
-        lastPhoto.getContext('2d').drawImage(photo, 0, 0);
-        updateSelectedFrame(photo);
+    function updateLastFrame(frame) {
+        lastFrame.getContext('2d').drawImage(frame, 0, 0);
+        updateSelectedFrame(frame);
     }
 
     function updateSelectedFrame(frame) {
-        for (const photo of photoList.children) {
-           photo.classList.remove("selected");
+        for (const frame of frameList.children) {
+           frame.classList.remove('selected');
         }
-        frame.classList.add("selected");
+        frame.classList.add('selected');
     }
 
     function renderNextFrame() {
-        if (photoList.hasChildNodes()) {
-            updateLastPhoto(photoList.children[currentFrame]);
-            currentFrame = (currentFrame + 1) % photoList.children.length;
+        if (frameList.hasChildNodes()) {
+            updateLastFrame(frameList.children[currentFrame]);
+            currentFrame = (currentFrame + 1) % frameList.children.length;
         }
     }
 
     function download() {
-        if (!photoList.hasChildNodes()) {
+        if (!frameList.hasChildNodes()) {
             return;
         }
 
@@ -200,10 +188,10 @@
         var i = 0;
         const progress = document.getElementById('progress');
         var downloadIntervalId = setInterval(function() {
-            if (i < photoList.children.length) {
-                encoder.addFrame(photoList.children[i].getContext("2d", {willReadFrequently: true}));
+            if (i < frameList.children.length) {
+                encoder.addFrame(frameList.children[i].getContext('2d', {willReadFrequently: true}));
                 i += 1;
-                progress.innerText = (100.0*i/photoList.children.length).toFixed(0) + '%';
+                progress.innerText = (100.0*i/frameList.children.length).toFixed(0) + '%';
             } else {
                 encoder.finish();
                 document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
@@ -215,5 +203,5 @@
         }, 1);
     }
 
-    window.addEventListener("load", load, false);
+    window.addEventListener('load', load, false);
 })();
