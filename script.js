@@ -8,7 +8,7 @@
     let frameList = null;
 
     let playAnimationInterval = null;
-    let currentFrame = 0;
+    let currentFrameId = 0;
 
     const videoSources = ['environment', 'user'];
     let videoSourceId = -1; // unset
@@ -156,8 +156,8 @@
 
     function renderNextFrame() {
         if (frameList.hasChildNodes()) {
-            updateLastFrame(frameList.children[currentFrame]);
-            currentFrame = (currentFrame + 1) % frameList.children.length;
+            updateLastFrame(frameList.children[currentFrameId]);
+            currentFrameId = (currentFrameId + 1) % frameList.children.length;
         }
     }
 
@@ -173,7 +173,7 @@
         } else {
             clearInterval(playAnimationInterval);
             playAnimationInterval = null;
-            currentFrame = 0;
+            currentFrameId = 0;
             document.querySelectorAll('.camera').forEach(camera => {
                camera.style.visibility = 'visible';
             });
