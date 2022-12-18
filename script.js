@@ -24,6 +24,7 @@
                 height = video.videoHeight / (video.videoWidth / width);
                 video.setAttribute('width', width);
                 video.setAttribute('height', height);
+                frameList.style.width = `${width}px`;
             }
         );
 
