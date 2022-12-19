@@ -55,10 +55,10 @@
             }
         );
 
-        document.getElementById('undoButton').addEventListener(
+        document.getElementById('removeFrameButton').addEventListener(
             'click',
             (ev) => {
-                undo();
+                removeFrame();
                 ev.preventDefault();
             }
         );
@@ -172,13 +172,15 @@
         frame.classList.add('selected');
     }
 
-    function undo() {
+    function removeFrame() {
         if (!frameList.lastChild) {
             return;
         }
-        frameList.removeChild(frameList.lastChild);
+        const selectedFrame = document.querySelector('#frameList .selected');
+        const selectedFrameId = Array.from(frameList.children).indexOf(selectedFrame);
+        frameList.removeChild(selectedFrame);
         if (frameList.lastChild) {
-            updateLastFrame(frameList.lastChild);
+            updateLastFrame(frameList.children[selectedFrameId] || frameList.lastChild);
         } else {
             clearFrame();
             updateCameraOpacity(1);
