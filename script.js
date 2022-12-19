@@ -201,8 +201,8 @@
                 });
                 playAnimationInterval = setInterval(renderNextFrame, 1000/fps);
                 const icon = document.getElementById('playPauseButtonIcon');
-                icon.classList.remove('fa-circle-play');
-                icon.classList.add('fa-circle-stop');
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-stop');
 
                 refreshControlsState(true);
             }
@@ -215,8 +215,8 @@
             });
             updateLastFrame(frameList.lastChild);
             const icon = document.getElementById('playPauseButtonIcon');
-            icon.classList.remove('fa-circle-stop');
-            icon.classList.add('fa-circle-play');
+            icon.classList.remove('fa-stop');
+            icon.classList.add('fa-play');
 
             refreshControlsState(false);
         }

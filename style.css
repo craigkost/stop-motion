@@ -13,14 +13,6 @@ html {
   box-shadow: 10px 10px #a48933;
 }
 
-.header h1 {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 400%;
-  color: #ff6d91;
-  margin: 20px 0;
-}
-
 .container {
   display: grid;
   width: fit-content;
@@ -32,15 +24,17 @@ html {
 }
 
 .btn.switch-camera {
+  border: none;
+  font-size: 36px;
   position: absolute;
   color: white;
-  margin: 5px;
-  opacity: 0.5;
-  text-shadow: 0 0 3px black;
+  text-shadow: 0 0 1px black;
+  padding: 15px 15px;
+  background: none;
 }
 
 .btn.switch-camera:hover {
-  color: #e0e0e0;
+  color: #ffd54f;
 }
 
 /* Controls */
@@ -50,15 +44,26 @@ html {
   padding: 10px 0;
 }
 
-.btn {
-  background: none;
+#controls .btn {
+  background: #ffd54f;
+  color: white;
   border: none;
-  font-size: 48px;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+  font-size: 36px;
   cursor: pointer;
+  text-align: center;
+  margin: 0 5px;
 }
 
-.btn:hover:enabled {
-  color: #ff6d91;
+#controls .btn:disabled {
+  background-color: #e5e5e5;
+}
+
+#controls .btn:hover:enabled {
+  background-color: #edc64b;
 }
 
 #frameList {
