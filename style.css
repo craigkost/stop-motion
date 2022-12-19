@@ -89,6 +89,7 @@ html {
 
 #controls .btn:disabled {
   background: var(--button-disabled-bg-color);
+  cursor: default;
 }
 
 #controls .btn:hover:enabled {
@@ -137,6 +138,7 @@ html {
 
 #downloadModal .btn:disabled {
   background: var(--button-disabled-bg-color);
+  cursor: default;
 }
 
 .progress-bar {
