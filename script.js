@@ -224,6 +224,11 @@
         }
     }
 
+    function showDownloadModal(show) {
+        document.getElementById('downloadModal').style.display = show ? 'flex' : 'none';
+        document.getElementById('captureWindow').style.display = show ? 'none' : 'flex';
+    }
+
     function prepareDownload() {
         if (!frameList.hasChildNodes()) {
             return;
@@ -231,8 +236,7 @@
 
         document.getElementById('save').disabled = true;
 
-        document.getElementById('downloadModal').style.display = 'flex';
-        document.getElementById('captureWindow').style.display = 'none';
+        showDownloadModal(true);
 
         encoder = new GIFEncoder();
         encoder.setRepeat(0);
@@ -266,8 +270,7 @@
         }
         encoder = null;
         document.getElementById('preview').setAttribute('src', '');
-        document.getElementById('downloadModal').style.display = 'none';
-        document.getElementById('captureWindow').style.display = 'flex';
+        showDownloadModal(false);
     }
 
     function download() {
