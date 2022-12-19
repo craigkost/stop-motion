@@ -96,9 +96,10 @@
         for (const button of document.querySelectorAll('#controls .btn')) {
             button.disabled = play;
         }
-        const hasNoFrames = !frameList.hasChildNodes();
-        document.getElementById('playPauseButton').disabled = hasNoFrames;
-        document.getElementById('downloadButton').disabled = hasNoFrames || play;
+        const notEnoughFrames = frameList.children.length < 2;
+        document.getElementById('removeFrameButton').disabled = (frameList.children.length < 1) || play;
+        document.getElementById('playPauseButton').disabled = notEnoughFrames;
+        document.getElementById('downloadButton').disabled = notEnoughFrames || play;
     }
 
     function switchCamera() {
@@ -184,8 +185,8 @@
         } else {
             clearFrame();
             updateCameraOpacity(1);
-            refreshControlsState();
         }
+        refreshControlsState();
     }
 
     function renderNextFrame() {
