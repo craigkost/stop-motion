@@ -242,11 +242,13 @@
         var gif = new GIF({
             repeat: 0,
             workers: 4,
-            quality: quality
+            quality: quality,
+            width: width,
+            height: height
         });
 
         for (const frame of frameList.children) {
-            gif.addFrame(frame, { delay: delayInMillis });
+            gif.addFrame(frame.getContext('2d'), { delay: delayInMillis });
         }
 
         const progressBar = document.getElementById('progressBar');
