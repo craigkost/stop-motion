@@ -1,7 +1,9 @@
 (() => {
     const width = 640;
-    const fps = 5; // 200 ms/frame
     let height = 0;
+
+    const fps = 5; // 200 ms/frame
+    const quality = 1;
 
     const videoSources = ['environment', 'user'];
     let videoSourceId = -1; // unset
@@ -241,6 +243,7 @@
         showDownloadModal(true);
 
         encoder = new GIFEncoder();
+        encoder.setQuality(quality);
         encoder.setRepeat(0);
         encoder.setFrameRate(fps);
         encoder.start();
