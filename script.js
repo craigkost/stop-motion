@@ -107,7 +107,7 @@
         navigator.mediaDevices
             .getUserMedia({
                 video: {
-                  facingMode: videoSources[videoSourceId]
+                    facingMode: videoSources[videoSourceId]
                 }
             })
             .then((stream) => {
@@ -121,12 +121,12 @@
 
     function updateCameraOpacity(opacity) {
         document.querySelectorAll('.camera').forEach(camera => {
-           camera.style.opacity = opacity;
+            camera.style.opacity = opacity;
         });
     }
 
     function clearFrame() {
-        const context = lastFrame.getContext('2d', {willReadFrequently: true});
+        const context = lastFrame.getContext('2d', { willReadFrequently: true });
         context.fillStyle = '#CCC';
         context.fillRect(0, 0, lastFrame.width, lastFrame.height);
     }
@@ -135,7 +135,7 @@
         const newCanvas = document.createElement('canvas');
         newCanvas.width = width;
         newCanvas.height = height;
-        const newCanvasContext = newCanvas.getContext('2d', {willReadFrequently: true});
+        const newCanvasContext = newCanvas.getContext('2d', { willReadFrequently: true });
         newCanvasContext.drawImage(canvas, 0, 0);
         return newCanvas;
     }
@@ -167,7 +167,7 @@
 
     function updateSelectedFrame(frame) {
         for (const frame of frameList.children) {
-           frame.classList.remove('selected');
+            frame.classList.remove('selected');
         }
         frame.classList.add('selected');
     }
@@ -199,9 +199,9 @@
         if (playAnimationInterval == null) {
             if (frameList.hasChildNodes()) {
                 document.querySelectorAll('.camera').forEach(camera => {
-                   camera.style.visibility = 'hidden';
+                    camera.style.visibility = 'hidden';
                 });
-                playAnimationInterval = setInterval(renderNextFrame, 1000/fps);
+                playAnimationInterval = setInterval(renderNextFrame, 1000 / fps);
                 const icon = document.getElementById('playPauseButtonIcon');
                 icon.classList.remove('fa-play');
                 icon.classList.add('fa-stop');
@@ -213,7 +213,7 @@
             playAnimationInterval = null;
             currentFrameId = 0;
             document.querySelectorAll('.camera').forEach(camera => {
-               camera.style.visibility = 'visible';
+                camera.style.visibility = 'visible';
             });
             updateLastFrame(frameList.lastChild);
             const icon = document.getElementById('playPauseButtonIcon');
@@ -246,11 +246,11 @@
         let i = 0;
         const progress = document.getElementById('progress');
         progress.innerText = '0%';
-        downloadIntervalId = setInterval(function() {
+        downloadIntervalId = setInterval(() => {
             if (i < frameList.children.length) {
                 encoder.addFrame(frameList.children[i].getContext('2d'));
                 i += 1;
-                progress.innerText = (100.0*i/frameList.children.length).toFixed(0) + '%';
+                progress.innerText = (100.0 * i / frameList.children.length).toFixed(0) + '%';
             } else {
                 encoder.finish();
                 document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));

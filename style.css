@@ -28,7 +28,8 @@ html {
   margin: 10px 0;
 }
 
-.camera, .output {
+.camera,
+.output {
   grid-area: 1 / 1;
 }
 
