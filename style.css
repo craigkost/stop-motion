@@ -11,6 +11,19 @@ html {
   height: 100%;
   background: var(--main-bg-color);
   font-family: "system-ui", sans-serif;
+  user-select: none;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--main-bg-color);
+  width: 100%;
+  height: 100%;
 }
 
 .content {
@@ -102,13 +115,9 @@ html {
   border-bottom: solid 5px var(--frame-selected-color);
 }
 
+/* Download Page */
+
 #downloadModal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: var(--main-bg-color);
-  width: 100%;
-  height: 100%;
   display: none;
 }
 

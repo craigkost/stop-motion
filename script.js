@@ -114,6 +114,7 @@
             .then((stream) => {
                 video.srcObject = stream;
                 video.play();
+                document.getElementById('loadingScreen').style.display = 'none';
             })
             .catch((err) => {
                 console.error(`An error occurred: ${err}`);
