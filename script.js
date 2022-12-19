@@ -2,7 +2,8 @@
     const width = 640;
     let height = 0;
 
-    const fps = 5; // 200 ms/frame
+    const fps = 5;
+    const delayInMillis = 1000 / fps;
     const quality = 1;
 
     const videoSources = ['environment', 'user'];
@@ -14,9 +15,6 @@
 
     let playAnimationInterval = null;
     let currentFrameId = 0;
-
-    let downloadIntervalId = null;
-    let encoder = null;
 
     function load() {
         video = document.getElementById('video');
@@ -205,7 +203,7 @@
                 document.querySelectorAll('.camera').forEach(camera => {
                     camera.style.visibility = 'hidden';
                 });
-                playAnimationInterval = setInterval(renderNextFrame, 1000 / fps);
+                playAnimationInterval = setInterval(renderNextFrame, delayInMillis);
                 const icon = document.getElementById('playPauseButtonIcon');
                 icon.classList.remove('fa-play');
                 icon.classList.add('fa-stop');
@@ -232,7 +230,6 @@
         document.getElementById('downloadModal').style.display = show ? 'flex' : 'none';
         document.getElementById('captureWindow').style.display = show ? 'none' : 'flex';
     }
-
     function prepareDownload() {
         if (!frameList.hasChildNodes()) {
             return;
@@ -242,11 +239,15 @@
 
         showDownloadModal(true);
 
-        encoder = new GIFEncoder();
-        encoder.setQuality(quality);
-        encoder.setRepeat(0);
-        encoder.setFrameRate(fps);
-        encoder.start();
+        var gif = new GIF({
+            repeat: 0,
+            workers: 4,
+            quality: quality
+        });
+
+        for (const frame of frameList.children) {
+            gif.addFrame(frame, { delay: delayInMillis });
+        }
 
         const progressBar = document.getElementById('progressBar');
         progressBar.style.display = 'block';
@@ -254,39 +255,30 @@
         const progress = document.getElementById('progress');
         progress.style.width = '0%';
 
-        let i = 0;
-        downloadIntervalId = setInterval(() => {
-            if (i < frameList.children.length) {
-                encoder.addFrame(frameList.children[i].getContext('2d'));
-                i += 1;
-                progress.style.width = (100.0 * i / frameList.children.length) + '%';
-            } else {
-                encoder.finish();
-                document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
+        gif.on('progress', (percent) => {
+            progress.style.width = (100 * percent) + '%';
+        });
 
-                progressBar.style.display = 'none';
-                clearInterval(downloadIntervalId);
-                downloadIntervalId = null;
+        gif.on('finished', (blob) => {
+            document.getElementById('preview').setAttribute('src', URL.createObjectURL(blob));
+            progressBar.style.display = 'none';
+            document.getElementById('save').disabled = false;
+        });
 
-                document.getElementById('save').disabled = false;
-            }
-        }, 1);
+        gif.render();
     }
 
     function closeDownloadModal() {
-        if (downloadIntervalId != null) {
-            clearInterval(downloadIntervalId);
-        }
-        encoder = null;
         document.getElementById('preview').setAttribute('src', '');
         showDownloadModal(false);
     }
 
     function download() {
-        if (encoder) {
-            encoder.download(document.getElementById('fileName').value);
-            closeDownloadModal();
-        }
+        const link = document.createElement('a');
+        link.setAttribute('href', document.getElementById('preview').getAttribute('src'));
+        link.setAttribute('download', document.getElementById('fileName').value);
+        link.click();
+        closeDownloadModal();
     }
 
     window.addEventListener('load', load, false);
