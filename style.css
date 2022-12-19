@@ -23,6 +23,11 @@ html {
   grid-area: 1 / 1;
 }
 
+#lastFrame {
+  width: 640px;
+  height: 480px;
+}
+
 .btn.switch-camera {
   cursor: pointer;
   border: none;
