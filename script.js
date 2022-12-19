@@ -245,19 +245,23 @@
         encoder.setFrameRate(fps);
         encoder.start();
 
-        let i = 0;
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.display = 'block';
+
         const progress = document.getElementById('progress');
-        progress.innerText = '0%';
+        progress.style.width = '0%';
+
+        let i = 0;
         downloadIntervalId = setInterval(() => {
             if (i < frameList.children.length) {
                 encoder.addFrame(frameList.children[i].getContext('2d'));
                 i += 1;
-                progress.innerText = (100.0 * i / frameList.children.length).toFixed(0) + '%';
+                progress.style.width = (100.0 * i / frameList.children.length) + '%';
             } else {
                 encoder.finish();
                 document.getElementById('preview').setAttribute('src', 'data:image/gif;base64,' + btoa(encoder.stream().getData()));
 
-                progress.innerText = '';
+                progressBar.style.display = 'none';
                 clearInterval(downloadIntervalId);
                 downloadIntervalId = null;
 
