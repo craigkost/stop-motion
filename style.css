@@ -111,6 +111,10 @@ html {
   background: #229062;
 }
 
+#downloadModal .btn:disabled {
+  background-color: #e5e5e5;
+}
+
 .progress-bar {
   text-align: center;
 }

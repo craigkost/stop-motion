@@ -229,6 +229,8 @@
             return;
         }
 
+        document.getElementById('save').disabled = true;
+
         document.getElementById('downloadModal').style.display = 'flex';
         document.getElementById('captureWindow').style.display = 'none';
 
@@ -252,6 +254,8 @@
                 progress.innerText = '';
                 clearInterval(downloadIntervalId);
                 downloadIntervalId = null;
+
+                document.getElementById('save').disabled = false;
             }
         }, 1);
     }
