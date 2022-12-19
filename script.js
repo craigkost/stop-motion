@@ -230,6 +230,7 @@
         }
 
         document.getElementById('downloadModal').style.display = 'flex';
+        document.getElementById('captureWindow').style.display = 'none';
 
         encoder = new GIFEncoder();
         encoder.setRepeat(0);
@@ -262,6 +263,7 @@
         encoder = null;
         document.getElementById('preview').setAttribute('src', '');
         document.getElementById('downloadModal').style.display = 'none';
+        document.getElementById('captureWindow').style.display = 'flex';
     }
 
     function download() {

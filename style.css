@@ -1,6 +1,6 @@
 html {
     height: 100%;
-    background-color: #ffd54f;
+    background-color: #fde24f;
     font-family: "system-ui", sans-serif;
 }
 
@@ -24,6 +24,7 @@ html {
 }
 
 .btn.switch-camera {
+  cursor: pointer;
   border: none;
   font-size: 36px;
   position: absolute;
@@ -34,7 +35,7 @@ html {
 }
 
 .btn.switch-camera:hover {
-  color: #ffd54f;
+  color: #fde24f;
 }
 
 /* Controls */
@@ -45,7 +46,7 @@ html {
 }
 
 #controls .btn {
-  background: #ffd54f;
+  background: #fde24f;
   color: white;
   border: none;
   border-radius: 50%;
@@ -71,9 +72,15 @@ html {
 }
 
 #frameList canvas {
+  cursor: pointer;
   width: 62px;
   margin: 0 1px;
   border-bottom: solid 5px white;
+}
+
+#frameList canvas:hover {
+  opacity: 0.5;
+  border-bottom: solid 5px #edc64b;
 }
 
 #frameList canvas.selected {
@@ -84,10 +91,24 @@ html {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #ffd54f;
+  background: #fde24f;
   width: 100%;
   height: 100%;
   display: none;
+}
+
+#downloadModal .btn {
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: 5px;
+  width: 36px;
+  background: #2cb67d;
+}
+
+#downloadModal .btn:hover {
+  background: #229062;
 }
 
 .progress-bar {
