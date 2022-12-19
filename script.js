@@ -89,6 +89,16 @@
 
         switchCamera();
         clearFrame();
+        refreshControlsState();
+    }
+
+    function refreshControlsState(play) {
+        for (const button of document.querySelectorAll('#controls .btn')) {
+            button.disabled = play;
+        }
+        const hasNoFrames = !frameList.hasChildNodes();
+        document.getElementById('playPauseButton').disabled = hasNoFrames;
+        document.getElementById('downloadButton').disabled = hasNoFrames || play;
     }
 
     function switchCamera() {
@@ -146,6 +156,8 @@
         );
         frameList.appendChild(newFrame);
         updateSelectedFrame(newFrame);
+
+        refreshControlsState();
     }
 
     function updateLastFrame(frame) {
@@ -170,6 +182,7 @@
         } else {
             clearFrame();
             updateCameraOpacity(1);
+            refreshControlsState();
         }
     }
 
@@ -190,6 +203,8 @@
                 const icon = document.getElementById('playPauseButtonIcon');
                 icon.classList.remove('fa-circle-play');
                 icon.classList.add('fa-circle-stop');
+
+                refreshControlsState(true);
             }
         } else {
             clearInterval(playAnimationInterval);
@@ -202,6 +217,8 @@
             const icon = document.getElementById('playPauseButtonIcon');
             icon.classList.remove('fa-circle-stop');
             icon.classList.add('fa-circle-play');
+
+            refreshControlsState(false);
         }
     }
 
@@ -219,6 +236,7 @@
 
         let i = 0;
         const progress = document.getElementById('progress');
+        progress.innerText = '0%';
         downloadIntervalId = setInterval(function() {
             if (i < frameList.children.length) {
                 encoder.addFrame(frameList.children[i].getContext('2d'));

@@ -1,7 +1,7 @@
 html {
     height: 100%;
     background-color: #ffd54f;
-    font-family: "Gill Sans", sans-serif;
+    font-family: "system-ui", sans-serif;
 }
 
 .content {
@@ -17,10 +17,8 @@ html {
   text-align: center;
   text-transform: uppercase;
   font-size: 400%;
+  color: #ff6d91;
   margin: 20px 0;
-  -webkit-text-fill-color: #ff6d91; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: black;
 }
 
 .container {
@@ -47,34 +45,19 @@ html {
 
 /* Controls */
 
-.controls {
+#controls {
   text-align: center;
-}
-
-.btn.play-pause {
-  float: left;
-}
-
-.btn.capture {
-  font-size: 60px;
-}
-
-.btn.undo {
-  position: absolute;
-}
-
-.btn.download {
-  float: right;
+  padding: 10px 0;
 }
 
 .btn {
   background: none;
   border: none;
-  font-size: 36px;
+  font-size: 48px;
   cursor: pointer;
 }
 
-.btn:hover {
+.btn:hover:enabled {
   color: #ff6d91;
 }
 
@@ -99,4 +82,12 @@ html {
   width: 100%;
   height: 100%;
   display: none;
+}
+
+.progress-bar {
+  text-align: center;
+}
+
+.progress {
+  font-size: 600%;
 }

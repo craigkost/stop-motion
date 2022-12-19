@@ -21,18 +21,20 @@
         </div>
         <button id="switchCameraButton" class="btn switch-camera"><i class="fa-solid fa-camera-rotate"></i></button>
     </div>
-    <div class="controls">
-        <button id="playPauseButton" class="btn play-pause"><i id="playPauseButtonIcon" class="fa-regular fa-circle-play"></i></button>
-        <button id="captureButton" class="btn capture"><i class="fa-regular fa-circle"></i></button>
-        <button id="undoButton" class="btn undo"><i class="fa-regular fa-circle-xmark"></i></button>
-        <button id="downloadButton" class="btn download"><i class="fa-regular fa-circle-down"></i></button>
+    <div id="controls">
+        <button id="playPauseButton" class="btn"><i id="playPauseButtonIcon" class="fa-regular fa-circle-play"></i></button>
+        <button id="captureButton" class="btn"><i class="fa-regular fa-circle"></i></button>
+        <button id="undoButton" class="btn"><i class="fa-regular fa-circle-xmark"></i></button>
+        <button id="downloadButton" class="btn"><i class="fa-regular fa-circle-down"></i></button>
     </div>
     <div id="frameList"></div>
 </div>
 
 <div id="downloadModal">
     <div class="content">
-        <span id="progress"></span>
+        <div class="progress-bar">
+            <span id="progress">0%</span>
+        </div>
         <img id="preview" src="">
         <form>
             <label for="fileName">File name</label>
