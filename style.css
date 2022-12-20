@@ -1,10 +1,13 @@
 :root {
   --main-bg-color: #fde24f;
+  --content-bg-color: #ffffff;
+  --content-shadow-color: #0000003f;
   --button-bg-color: #fde24f;
-  --button-disabled-bg-color: #e5e5e5;
-  --button-hover-bg-color: #edc64b;
-  --frame-selected-color: #ff6d91;
-  --frame-hover-color: #edc64b;
+  --button-bg-color-disabled: #e5e5e5;
+  --button-bg-color-hover: #edc64b;
+  --button-fg-color: #ffffff;
+  --frame-color-selected: #ff6d91;
+  --frame-color-hover: #edc64b;
   --progress-bar-bg-color: #f1f1f1;
   --progress-bar-fg-color: #87cefa;
 }
@@ -16,7 +19,7 @@ html {
   user-select: none;
 }
 
-.page {
+.screen {
   position: absolute;
   top: 0;
   left: 0;
@@ -30,10 +33,10 @@ html {
 
 .content {
   width: fit-content;
-  background: white;
+  background: var(--content-bg-color);
+  box-shadow: 10px 10px var(--content-shadow-color);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 10px 10px #a48933;
 }
 
 .container {
@@ -57,10 +60,10 @@ html {
   border: none;
   font-size: 36px;
   position: absolute;
-  color: white;
+  background: none;
+  color: var(--button-fg-color);
   text-shadow: 0 0 1px black;
   padding: 15px 15px;
-  background: none;
 }
 
 .btn.switch-camera:hover {
@@ -76,7 +79,7 @@ html {
 
 #controls .btn {
   background: var(--button-bg-color);
-  color: white;
+  color: var(--button-fg-color);
   border: none;
   border-radius: 50%;
   width: 70px;
@@ -89,12 +92,12 @@ html {
 }
 
 #controls .btn:disabled {
-  background: var(--button-disabled-bg-color);
+  background: var(--button-bg-color-disabled);
   cursor: default;
 }
 
 #controls .btn:hover:enabled {
-  background: var(--button-hover-bg-color);
+  background: var(--button-bg-color-hover);
 }
 
 #frameList {
@@ -105,26 +108,26 @@ html {
   cursor: pointer;
   width: 62px;
   margin: 0 1px;
-  border-bottom: solid 5px white;
+  border-bottom: solid 5px #00000000;
 }
 
 #frameList canvas:hover {
   opacity: 0.5;
-  border-bottom: solid 5px var(--frame-hover-color);
+  border-bottom: solid 5px var(--frame-color-hover);
 }
 
 #frameList canvas.selected {
-  border-bottom: solid 5px var(--frame-selected-color);
+  border-bottom: solid 5px var(--frame-color-selected);
 }
 
 /* Download Page */
 
-#downloadModal {
+#downloadScreen {
   display: none;
 }
 
-#downloadModal .btn {
-  color: white;
+#downloadScreen .btn {
+  color: var(--content-bg-color);
   border: none;
   cursor: pointer;
   padding: 5px 8px;
@@ -133,12 +136,12 @@ html {
   background: var(--button-bg-color);
 }
 
-#downloadModal .btn:hover {
-  background: var(--button-hover-bg-color);
+#downloadScreen .btn:hover {
+  background: var(--button-bg-color-hover);
 }
 
-#downloadModal .btn:disabled {
-  background: var(--button-disabled-bg-color);
+#downloadScreen .btn:disabled {
+  background: var(--button-bg-color-disabled);
   cursor: default;
 }
 

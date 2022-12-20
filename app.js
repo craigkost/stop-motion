@@ -73,7 +73,7 @@
             }
         );
 
-        document.getElementById('save').addEventListener(
+        document.getElementById('saveButton').addEventListener(
             'click',
             (ev) => {
                 download();
@@ -81,10 +81,10 @@
             }
         );
 
-        document.getElementById('cancel').addEventListener(
+        document.getElementById('cancelButton').addEventListener(
             'click',
             (ev) => {
-                closeDownloadModal();
+                closedownloadScreen();
                 ev.preventDefault();
             }
         );
@@ -228,18 +228,18 @@
         }
     }
 
-    function showDownloadModal(show) {
-        document.getElementById('downloadModal').style.display = show ? 'flex' : 'none';
-        document.getElementById('captureWindow').style.display = show ? 'none' : 'flex';
+    function showdownloadScreen(show) {
+        document.getElementById('downloadScreen').style.display = show ? 'flex' : 'none';
+        document.getElementById('captureScreen').style.display = show ? 'none' : 'flex';
     }
     function prepareDownload() {
         if (!frameList.hasChildNodes()) {
             return;
         }
 
-        document.getElementById('save').disabled = true;
+        document.getElementById('saveButton').disabled = true;
 
-        showDownloadModal(true);
+        showdownloadScreen(true);
 
         gif = new GIF({
             repeat: 0,
@@ -267,13 +267,13 @@
         gif.on('finished', (blob) => {
             document.getElementById('preview').setAttribute('src', URL.createObjectURL(blob));
             progressBar.style.display = 'none';
-            document.getElementById('save').disabled = false;
+            document.getElementById('saveButton').disabled = false;
         });
 
         gif.render();
     }
 
-    function closeDownloadModal() {
+    function closedownloadScreen() {
         document.getElementById('preview').setAttribute('src', '');
         if (gif) {
             gif.abort();
@@ -282,7 +282,7 @@
             }
             gif = null;
         }
-        showDownloadModal(false);
+        showdownloadScreen(false);
     }
 
     function download() {
@@ -290,7 +290,7 @@
         link.setAttribute('href', document.getElementById('preview').getAttribute('src'));
         link.setAttribute('download', document.getElementById('fileName').value);
         link.click();
-        closeDownloadModal();
+        closedownloadScreen();
     }
 
     window.addEventListener('load', load, false);
