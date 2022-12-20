@@ -1,4 +1,5 @@
 import { Drawing } from '/lib/drawing.js';
+import '/lib/gif.js';
 
 (() => {
     const width = 640;
