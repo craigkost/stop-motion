@@ -6,8 +6,8 @@
     const delayInMillis = 1000 / fps;
     const quality = 1;
 
-    const videoSources = ['environment', 'user'];
-    let videoSourceId = -1; // unset
+    const videoDevices = [];
+    let videoDeviceId = -1; // unset
     let video = null;
 
     let lastFrame = null;
@@ -89,7 +89,7 @@
             }
         );
 
-        switchCamera();
+        loadCameras();
         clearFrame();
         refreshControlsState();
     }
@@ -104,13 +104,32 @@
         document.getElementById('downloadButton').disabled = notEnoughFrames || play;
     }
 
-    function switchCamera() {
-        videoSourceId = (videoSourceId + 1) % videoSources.length;
+    function loadCameras() {
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+            devices
+                .filter(device => device.kind === 'videoinput')
+                .forEach(device => {
+                    if (device.getCapabilities().facingMode.includes('environment')) {
+                        videoDeviceId = videoDevices.length;
+                    }
+                    videoDevices.push(device);
+                });
 
+            if (videoDevices.length < 2) {
+                document.getElementById('switchCameraButton').style.display = 'none';
+            }
+
+            switchCamera();
+        });
+    }
+
+    function switchCamera() {
         navigator.mediaDevices
             .getUserMedia({
                 video: {
-                    facingMode: videoSources[videoSourceId]
+                    deviceId: {
+                        exact: videoDevices[videoDeviceId].deviceId
+                    }
                 }
             })
             .then((stream) => {
@@ -121,6 +140,8 @@
             .catch((err) => {
                 console.error(`An error occurred: ${err}`);
             });
+
+        videoDeviceId = (videoDeviceId + 1) % videoDevices.length;
     }
 
     function updateCameraOpacity(opacity) {
