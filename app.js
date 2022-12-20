@@ -107,7 +107,7 @@
     function loadCameras() {
         navigator.mediaDevices.enumerateDevices().then((devices) => {
             devices
-                .filter(device => device.kind === 'videoinput')
+                .filter(device => device.kind === 'videoinput' && device.deviceId)
                 .forEach(device => {
                     if (device.getCapabilities().facingMode.includes('environment')) {
                         videoDeviceId = videoDevices.length;
@@ -119,7 +119,12 @@
                 document.getElementById('switchCameraButton').style.display = 'none';
             }
 
-            switchCamera();
+            if (videoDevices.length > 0) {
+                switchCamera();
+            } else {
+                // no cameras
+                document.getElementById('loadingScreen').innerText = "Sorry you need a camera for this..."
+            }
         });
     }
 
