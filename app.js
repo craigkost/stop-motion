@@ -23,28 +23,11 @@
         lastFrame = document.getElementById('lastFrame');
         frameList = document.getElementById('frameList');
 
-        video.addEventListener(
-            'canplay',
-            (ev) => {
-                height = video.videoHeight / (video.videoWidth / width);
-                video.setAttribute('width', width);
-                video.setAttribute('height', height);
-                frameList.style.width = `${width}px`;
-            }
-        );
-
         document.getElementById('captureButton').addEventListener(
             'click',
             (ev) => {
-                captureFrame();
-                updateCameraOpacity(0.5);
-                ev.preventDefault();
-            }
-        );
-        document.getElementById('switchCameraButton').addEventListener(
-            'click',
-            (ev) => {
-                switchCamera();
+                captureFrame(video);
+                updateInputOpacity(0.5);
                 ev.preventDefault();
             }
         );
@@ -89,19 +72,27 @@
             }
         );
 
+        video.addEventListener(
+            'canplay',
+            (ev) => {
+                height = video.videoHeight / (video.videoWidth / width);
+                video.setAttribute('width', width);
+                video.setAttribute('height', height);
+            }
+        );
+
+        document.getElementById('switchCameraButton').addEventListener(
+            'click',
+            (ev) => {
+                switchCamera();
+                ev.preventDefault();
+            }
+        );
+
+        frameList.style.width = `${width}px`;
         loadCameras();
         clearFrame();
         refreshControlsState();
-    }
-
-    function refreshControlsState(play) {
-        for (const button of document.querySelectorAll('#controls .btn')) {
-            button.disabled = play;
-        }
-        const notEnoughFrames = frameList.children.length < 2;
-        document.getElementById('removeFrameButton').disabled = (frameList.children.length < 1) || play;
-        document.getElementById('playPauseButton').disabled = notEnoughFrames;
-        document.getElementById('downloadButton').disabled = notEnoughFrames || play;
     }
 
     function loadCameras() {
@@ -154,9 +145,19 @@
         videoDeviceId = (videoDeviceId + 1) % videoDevices.length;
     }
 
-    function updateCameraOpacity(opacity) {
-        document.querySelectorAll('.camera').forEach(camera => {
-            camera.style.opacity = opacity;
+    function refreshControlsState(play) {
+        for (const button of document.querySelectorAll('#controls .btn')) {
+            button.disabled = play;
+        }
+        const notEnoughFrames = frameList.children.length < 2;
+        document.getElementById('removeFrameButton').disabled = (frameList.children.length < 1) || play;
+        document.getElementById('playPauseButton').disabled = notEnoughFrames;
+        document.getElementById('downloadButton').disabled = notEnoughFrames || play;
+    }
+
+    function updateInputOpacity(opacity) {
+        document.querySelectorAll('.input').forEach(input => {
+            input.style.opacity = opacity;
         });
     }
 
@@ -175,11 +176,11 @@
         return newCanvas;
     }
 
-    function captureFrame() {
+    function captureFrame(input) {
         const context = lastFrame.getContext('2d');
         lastFrame.width = width;
         lastFrame.height = height;
-        context.drawImage(video, 0, 0, width, height);
+        context.drawImage(input, 0, 0, width, height);
 
         const newFrame = copyCanvas(lastFrame);
         newFrame.addEventListener(
@@ -218,7 +219,7 @@
             updateLastFrame(frameList.children[selectedFrameId] || frameList.lastChild);
         } else {
             clearFrame();
-            updateCameraOpacity(1);
+            updateInputOpacity(1);
         }
         refreshControlsState();
     }
@@ -233,8 +234,8 @@
     function playOrPauseAnimation() {
         if (playAnimationInterval == null) {
             if (frameList.hasChildNodes()) {
-                document.querySelectorAll('.camera').forEach(camera => {
-                    camera.style.visibility = 'hidden';
+                document.querySelectorAll('.input').forEach(input => {
+                    input.style.visibility = 'hidden';
                 });
                 playAnimationInterval = setInterval(renderNextFrame, delayInMillis);
                 const icon = document.getElementById('playPauseButtonIcon');
@@ -247,8 +248,8 @@
             clearInterval(playAnimationInterval);
             playAnimationInterval = null;
             currentFrameId = 0;
-            document.querySelectorAll('.camera').forEach(camera => {
-                camera.style.visibility = 'visible';
+            document.querySelectorAll('.input').forEach(input => {
+                input.style.visibility = 'visible';
             });
             updateLastFrame(frameList.lastChild);
             const icon = document.getElementById('playPauseButtonIcon');
@@ -263,6 +264,7 @@
         document.getElementById('downloadScreen').style.display = show ? 'flex' : 'none';
         document.getElementById('captureScreen').style.display = show ? 'none' : 'flex';
     }
+
     function prepareDownload() {
         if (!frameList.hasChildNodes()) {
             return;

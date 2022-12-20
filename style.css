@@ -45,7 +45,7 @@ html {
   margin: 10px 0;
 }
 
-.camera,
+.input,
 .output {
   grid-area: 1 / 1;
 }
@@ -54,6 +54,8 @@ html {
   width: 640px;
   height: 480px;
 }
+
+/* Camera Controls */
 
 .btn.switch-camera {
   cursor: pointer;
@@ -99,6 +101,8 @@ html {
 #controls .btn:hover:enabled {
   background: var(--button-bg-color-hover);
 }
+
+/* Frame List */
 
 #frameList {
   padding: 10px 0;
