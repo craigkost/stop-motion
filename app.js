@@ -124,6 +124,11 @@
     }
 
     function switchCamera() {
+        if (video.srcObject) {
+            // stop existing video stream
+            video.srcObject.getTracks().forEach(track => track.stop());
+        }
+
         navigator.mediaDevices
             .getUserMedia({
                 video: {
