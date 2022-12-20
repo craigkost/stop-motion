@@ -246,7 +246,8 @@
             workers: 4,
             quality: quality,
             width: width,
-            height: height
+            height: height,
+            workerScript: 'lib/gif.worker.js'
         });
 
         for (const frame of frameList.children) {
