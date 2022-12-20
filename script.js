@@ -16,6 +16,8 @@
     let playAnimationInterval = null;
     let currentFrameId = 0;
 
+    let gif = null;
+
     function load() {
         video = document.getElementById('video');
         lastFrame = document.getElementById('lastFrame');
@@ -239,7 +241,7 @@
 
         showDownloadModal(true);
 
-        var gif = new GIF({
+        gif = new GIF({
             repeat: 0,
             workers: 4,
             quality: quality,
@@ -272,6 +274,13 @@
 
     function closeDownloadModal() {
         document.getElementById('preview').setAttribute('src', '');
+        if (gif) {
+            gif.abort();
+            for (const worker of gif.freeWorkers) {
+                worker.terminate();
+            }
+            gif = null;
+        }
         showDownloadModal(false);
     }
 
