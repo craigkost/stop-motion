@@ -14,10 +14,13 @@
             <div class="output">
                 <canvas id="lastFrame"></canvas>
             </div>
-            <div class="input">
+            <div class="input input-video" style="display:none">
                 <video id="video">Video stream not available.</video>
+                <button id="switchCameraButton" class="btn switch-camera"><i class="fa-solid fa-camera-rotate"></i></button>
             </div>
-            <button id="switchCameraButton" class="btn switch-camera"><i class="fa-solid fa-camera-rotate"></i></button>
+            <div class="input input-drawing">
+                <canvas id="drawing"></canvas>
+            </div>
         </div>
         <div id="controls">
             <button id="playPauseButton" class="btn"><i id="playPauseButtonIcon" class="fa-solid fa-play"></i></button>
@@ -50,6 +53,6 @@
 </body>
 
 <script src="lib/gif.js"></script>
-<script src="app.js"></script>
+<script src="app.js" type="module"></script>
 
 </html>

@@ -1,6 +1,6 @@
 :root {
   --main-bg-color: #fde24f;
-  --content-bg-color: #ffffff;
+  --content-bg-color: #f4f4f4;
   --content-shadow-color: #0000003f;
   --button-bg-color: #fde24f;
   --button-bg-color-disabled: #e5e5e5;
@@ -47,12 +47,18 @@ html {
 
 .input,
 .output {
+  position: relative;
   grid-area: 1 / 1;
 }
 
 #lastFrame {
   width: 640px;
   height: 480px;
+}
+
+/* Drawing */
+#drawing {
+  touch-action: none;
 }
 
 /* Camera Controls */
@@ -62,6 +68,8 @@ html {
   border: none;
   font-size: 36px;
   position: absolute;
+  top: 0;
+  left: 0;
   background: none;
   color: var(--button-fg-color);
   text-shadow: 0 0 1px black;

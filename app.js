@@ -1,6 +1,8 @@
+import { Drawing } from '/lib/drawing.js';
+
 (() => {
     const width = 640;
-    let height = 0;
+    let height = 480;
 
     const fps = 5;
     const delayInMillis = 1000 / fps;
@@ -9,6 +11,10 @@
     const videoDevices = [];
     let videoDeviceId = -1; // unset
     let video = null;
+
+    let drawing = null;
+
+    let capture = null;
 
     let lastFrame = null;
     let frameList = null;
@@ -20,13 +26,23 @@
 
     function load() {
         video = document.getElementById('video');
+        drawing = new Drawing(document.getElementById('drawing'), { width, height });
+
+        capture = drawing;
+
+        // capture = { // TODO make Video class
+        //     clear: () => { },
+        //     image: () => video
+        // };
+
         lastFrame = document.getElementById('lastFrame');
         frameList = document.getElementById('frameList');
 
         document.getElementById('captureButton').addEventListener(
             'click',
             (ev) => {
-                captureFrame(video);
+                captureFrame(capture.image());
+                capture.clear();
                 updateInputOpacity(0.5);
                 ev.preventDefault();
             }
@@ -75,7 +91,6 @@
         video.addEventListener(
             'canplay',
             (ev) => {
-                height = video.videoHeight / (video.videoWidth / width);
                 video.setAttribute('width', width);
                 video.setAttribute('height', height);
             }
@@ -91,7 +106,6 @@
 
         frameList.style.width = `${width}px`;
         loadCameras();
-        clearFrame();
         refreshControlsState();
     }
 
@@ -161,12 +175,6 @@
         });
     }
 
-    function clearFrame() {
-        const context = lastFrame.getContext('2d', { willReadFrequently: true });
-        context.fillStyle = '#CCC';
-        context.fillRect(0, 0, lastFrame.width, lastFrame.height);
-    }
-
     function copyCanvas(canvas) {
         const newCanvas = document.createElement('canvas');
         newCanvas.width = width;
@@ -218,7 +226,6 @@
         if (frameList.lastChild) {
             updateLastFrame(frameList.children[selectedFrameId] || frameList.lastChild);
         } else {
-            clearFrame();
             updateInputOpacity(1);
         }
         refreshControlsState();
