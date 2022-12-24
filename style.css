@@ -10,6 +10,7 @@
   --frame-color-hover: #edc64b;
   --progress-bar-bg-color: #f1f1f1;
   --progress-bar-fg-color: #87cefa;
+  --input-controls-bg-color: #0000001f;
 }
 
 html {
@@ -62,27 +63,22 @@ html {
 
 /* Input Controls */
 
-.btn-dark {
-  color: #e5e5e5
-}
-
-.btn-light {
-  color: var(--button-fg-color);
-}
-
-.overlaid {
-  text-shadow: 0 0 1px black;
+.input-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  margin: 10px;
+  background: var(--input-controls-bg-color);
+  border-radius: 5px;
 }
 
 .input .btn {
   cursor: pointer;
   border: none;
-  font-size: 36px;
-  position: absolute;
-  top: 0;
-  right: 0;
+  font-size: 28px;
+  color: var(--button-fg-color);
   background: none;
-  padding: 15px 15px;
 }
 
 .input .btn:hover {
