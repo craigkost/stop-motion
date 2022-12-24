@@ -59,6 +59,14 @@ import '/lib/gif.js';
             }
         )
 
+        document.getElementById('undoDrawingButton').addEventListener(
+            'click',
+            (ev) => {
+                drawing.undo();
+                ev.preventDefault();
+            }
+        )
+
         document.getElementById('captureButton').addEventListener(
             'click',
             (ev) => {
