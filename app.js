@@ -15,7 +15,8 @@ import '/lib/gif.js';
 
     let drawing = null;
 
-    let capture = null;
+    const captureList = [];
+    let captureId = 0;
 
     let lastFrame = null;
     let frameList = null;
@@ -27,21 +28,41 @@ import '/lib/gif.js';
 
     function load() {
         video = document.getElementById('video');
-        drawing = new Drawing(document.getElementById('drawing'), { width, height });
+        captureList.push({ // TODO make Video class
+            clear: () => { },
+            image: () => video
+        })
 
-        capture = drawing;
-
-        // capture = { // TODO make Video class
-        //     clear: () => { },
-        //     image: () => video
-        // };
+        drawing = new Drawing(document.getElementById('drawing'), { width, height })
+        captureList.push(drawing);
 
         lastFrame = document.getElementById('lastFrame');
         frameList = document.getElementById('frameList');
 
+        document.getElementById('switchCaptureButton').addEventListener(
+            'click',
+            (ev) => {
+                document.querySelectorAll('#switchCaptureButton i, .input').forEach(
+                    element => element.classList.toggle('hidden')
+                )
+                captureId = (captureId + 1) % captureList.length;
+
+                ev.preventDefault();
+            }
+        )
+
+        document.getElementById('clearDrawingButton').addEventListener(
+            'click',
+            (ev) => {
+                drawing.clear();
+                ev.preventDefault();
+            }
+        )
+
         document.getElementById('captureButton').addEventListener(
             'click',
             (ev) => {
+                const capture = captureList[captureId];
                 captureFrame(capture.image());
                 capture.clear();
                 updateInputOpacity(0.5);
@@ -84,7 +105,7 @@ import '/lib/gif.js';
         document.getElementById('cancelButton').addEventListener(
             'click',
             (ev) => {
-                closedownloadScreen();
+                closeDownloadScreen();
                 ev.preventDefault();
             }
         );
@@ -128,6 +149,7 @@ import '/lib/gif.js';
             if (videoDevices.length > 0) {
                 switchCamera();
             } else {
+                // TODO drawing mode only is possible
                 // no cameras
                 document.getElementById('loadingScreen').innerText = "Sorry you need a camera for this..."
             }
@@ -314,7 +336,7 @@ import '/lib/gif.js';
         gif.render();
     }
 
-    function closedownloadScreen() {
+    function closeDownloadScreen() {
         document.getElementById('preview').setAttribute('src', '');
         if (gif) {
             gif.abort();
@@ -331,7 +353,7 @@ import '/lib/gif.js';
         link.setAttribute('href', document.getElementById('preview').getAttribute('src'));
         link.setAttribute('download', document.getElementById('fileName').value);
         link.click();
-        closedownloadScreen();
+        closeDownloadScreen();
     }
 
     window.addEventListener('load', load, false);

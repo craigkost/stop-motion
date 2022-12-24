@@ -14,19 +14,21 @@
             <div class="output">
                 <canvas id="lastFrame"></canvas>
             </div>
-            <div class="input input-video" style="display:none">
+            <div class="input input-video">
                 <video id="video">Video stream not available.</video>
-                <button id="switchCameraButton" class="btn switch-camera"><i class="fa-solid fa-camera-rotate"></i></button>
+                <button id="switchCameraButton" class="btn btn-light overlaid"><i class="fa-solid fa-camera-rotate"></i></button>
             </div>
-            <div class="input input-drawing">
+            <div class="input input-drawing hidden">
                 <canvas id="drawing"></canvas>
+                <button id="clearDrawingButton" class="btn btn-dark"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>
         <div id="controls">
+            <button id="switchCaptureButton" class="btn left"><i class="fa-solid fa-camera hidden"></i><i class="fa-solid fa-paintbrush"></i></button>
             <button id="playPauseButton" class="btn"><i id="playPauseButtonIcon" class="fa-solid fa-play"></i></button>
-            <button id="captureButton" class="btn"><i class="fa-solid fa-camera"></i></button>
+            <button id="captureButton" class="btn"><i class="fa-solid fa-circle"></i></button>
             <button id="removeFrameButton" class="btn"><i class="fa-solid fa-xmark"></i></button>
-            <button id="downloadButton" class="btn"><i class="fa-solid fa-download"></i></button>
+            <button id="downloadButton" class="btn right"><i class="fa-solid fa-download"></i></button>
         </div>
         <div id="frameList"></div>
     </div>
