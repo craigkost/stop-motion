@@ -201,7 +201,7 @@ import '/lib/gif.js';
     }
 
     function updateInputOpacity(opacity) {
-        document.querySelectorAll('.input').forEach(input => {
+        document.querySelectorAll('.capture').forEach(input => {
             input.style.opacity = opacity;
         });
     }
