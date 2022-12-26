@@ -133,6 +133,40 @@ import '/lib/gif.js';
             }
         );
 
+        const colorChoicePanel = document.getElementById("colorChoicePanel")
+        const colorChooserButton = document.getElementById('colorChoiceButton');
+        colorChooserButton.addEventListener(
+            'click',
+            (ev) => {
+                colorChoicePanel.classList.toggle('hidden');
+                ev.preventDefault();
+            }
+        )
+
+        document.querySelectorAll('.color-choice').forEach(
+            (colorChoice) => {
+                const colorValue = colorChoice.getAttribute('data-color');
+                colorChoice.style.backgroundColor = colorValue;
+
+                drawing.setColor(colorValue);
+                colorChooserButton.style.color = colorValue
+
+                colorChoice.addEventListener(
+                    'click',
+                    (ev) => {
+                        const selectedColor = ev.target.getAttribute('data-color');
+                        drawing.setColor(selectedColor);
+                        colorChooserButton.style.color = selectedColor
+
+                        // close panel
+                        colorChoicePanel.classList.toggle('hidden');
+
+                        ev.preventDefault();
+                    }
+                )
+            }
+        )
+
         frameList.style.width = `${width}px`;
         loadCameras();
         refreshControlsState();
