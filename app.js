@@ -72,7 +72,6 @@ import '/lib/gif.js';
             (ev) => {
                 const capture = captureList[captureId];
                 captureFrame(capture.image());
-                capture.clear();
                 updateInputOpacity(0.5);
                 ev.preventDefault();
             }
