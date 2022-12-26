@@ -28,10 +28,6 @@ import '/lib/gif.js';
 
     function load() {
         video = document.getElementById('video');
-        captureList.push({ // TODO make Video class
-            clear: () => { },
-            image: () => video
-        })
 
         drawing = new Drawing(document.getElementById('drawing'), { width, height })
         captureList.push(drawing);
@@ -42,11 +38,7 @@ import '/lib/gif.js';
         document.getElementById('switchCaptureButton').addEventListener(
             'click',
             (ev) => {
-                document.querySelectorAll('#switchCaptureButton i, .input').forEach(
-                    element => element.classList.toggle('hidden')
-                )
-                captureId = (captureId + 1) % captureList.length;
-
+                switchCapture();
                 ev.preventDefault();
             }
         )
@@ -172,32 +164,77 @@ import '/lib/gif.js';
         refreshControlsState();
     }
 
-    function loadCameras() {
-        navigator.mediaDevices.enumerateDevices().then((devices) => {
-            devices
-                .filter(device => device.kind === 'videoinput' && device.deviceId)
-                .forEach(device => {
-                    if (device.getCapabilities().facingMode.includes('environment')) {
-                        videoDeviceId = videoDevices.length;
-                    }
-                    videoDevices.push(device);
-                });
-
-            if (videoDevices.length < 2) {
-                document.getElementById('switchCameraButton').style.display = 'none';
-            }
-
-            if (videoDevices.length > 0) {
-                switchCamera();
-            } else {
-                // TODO drawing mode only is possible
-                // no cameras
-                document.getElementById('loadingScreen').innerText = "Sorry you need a camera for this..."
-            }
-        });
+    function nextCaptureId() {
+        return (captureId + 1) % captureList.length;
     }
 
-    function switchCamera() {
+    function switchCapture() {
+        document.querySelectorAll('#switchCaptureButton i, .input').forEach(
+            element => element.classList.add('hidden')
+        )
+        captureId = nextCaptureId();
+        document.querySelectorAll(`.input-${captureList[captureId].name()}`).forEach(
+            element => element.classList.remove('hidden')
+        );
+        document.querySelectorAll(`.input-btn-${captureList[nextCaptureId()].name()}`).forEach(
+            element => element.classList.remove('hidden')
+        );
+    }
+
+    function finishLoading() {
+        const switchCaptureButton = document.getElementById('switchCaptureButton');
+        if (captureList.length < 2) {
+            switchCaptureButton.classList.add('hidden');
+        } else {
+            captureList.forEach((capture) => {
+                const captureIcon = document.createElement('i');
+                captureIcon.classList.add('fa-solid');
+                captureIcon.classList.add('input-btn-' + capture.name());
+                captureIcon.classList.add(capture.icon());
+                switchCaptureButton.appendChild(captureIcon);
+            });
+        }
+
+        switchCapture();
+
+        document.getElementById('loadingScreen').style.display = 'none';
+    }
+
+    function loadCameras() {
+        // request video permissions before loading cameras otherwise device list will be empty
+
+        navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(() => {
+                navigator.mediaDevices.enumerateDevices().then((devices) => {
+                    devices
+                        .filter(device => device.kind === 'videoinput' && device.deviceId)
+                        .forEach(device => {
+                            if (device.getCapabilities().facingMode.includes('environment')) {
+                                videoDeviceId = videoDevices.length;
+                            }
+                            videoDevices.push(device);
+                        });
+
+                    if (videoDevices.length < 2) {
+                        document.getElementById('switchCameraButton').style.display = 'none';
+                    }
+
+                    if (videoDevices.length > 0) {
+                        captureList.push({ // TODO make Video class
+                            name: () => 'video',
+                            clear: () => { },
+                            image: () => video,
+                            icon: () => 'fa-camera'
+                        })
+                        switchCamera(finishLoading);
+                    }
+                });
+            })
+            .catch(finishLoading);
+    }
+
+    function switchCamera(onComplete) {
         if (video.srcObject) {
             // stop existing video stream
             video.srcObject.getTracks().forEach(track => track.stop());
@@ -214,7 +251,9 @@ import '/lib/gif.js';
             .then((stream) => {
                 video.srcObject = stream;
                 video.play();
-                document.getElementById('loadingScreen').style.display = 'none';
+                if (onComplete) {
+                    onComplete();
+                }
             })
             .catch((err) => {
                 console.error(`An error occurred: ${err}`);
