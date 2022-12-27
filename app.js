@@ -181,7 +181,11 @@ import '/lib/gif.js';
         );
     }
 
-    function finishLoading() {
+    function finishLoading(err) {
+        if (err) {
+            console.error(err)
+        }
+
         const switchCaptureButton = document.getElementById('switchCaptureButton');
         if (captureList.length < 2) {
             switchCaptureButton.classList.add('hidden');
@@ -205,7 +209,10 @@ import '/lib/gif.js';
 
         navigator.mediaDevices
             .getUserMedia({ video: true })
-            .then(() => {
+            .then((stream) => {
+                // close stream as we are only using it to ask permissions for now
+                stream.getTracks().forEach(track => track.stop());
+
                 navigator.mediaDevices.enumerateDevices().then((devices) => {
                     devices
                         .filter(device => device.kind === 'videoinput' && device.deviceId)
